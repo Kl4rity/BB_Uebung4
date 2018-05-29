@@ -12,14 +12,13 @@ class ListController {
     }
     
     public function route(){                
-        $postData = json_decode(filter_input(INPUT_POST, 'data'));
-        $postData = $this->validatePostData($postData);
-        $responsibleModelInstance = $this->fetchResponsibleModelInstance($postData->listtype);
+        $postData = $this->validatePostData(json_decode(filter_input(INPUT_POST, 'data')));
+        if (strtoupper($postData->action) != "GET-SHOPPINGLIST"){
+            $responsibleModelInstance = $this->fetchResponsibleModelInstance($postData->listtype);
+        } else {
+            $responsibleModelInstance = new ShoppingList();
+        }
         $dbResponseData = $responsibleModelInstance->executeRequest($postData);
-        $this->formatAndDisplayData($dbResponseData);
-    }
-    
-    private function formatAndDisplayData($dbResponseData){
         $this->jsonView->streamOutput($dbResponseData);
     }
     
@@ -39,12 +38,17 @@ class ListController {
                     , "CREATE"
                     , "UPDATE"
                     , "DELETE"
+                    , "GET-SHOPPINGLIST"
                 ];
         
-       $postDataIsValid = false;
-       $listTypeIsValid = in_array(strtoupper($postData->listtype), $validTables);
        $actionIsValid = in_array(strtoupper($postData->action), $validActions);
        
+       if ($postData->listtype != "GET-SHOPPINGLIST"){
+           $listTypeIsValid = in_array(strtoupper($postData->listtype), $validTables);
+       } else {
+           $listTypeIsValid = true;
+       } 
+
        if(!$actionIsValid || !$listTypeIsValid){
            $postData->listtype = "ERROR";
        }
