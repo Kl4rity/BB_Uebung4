@@ -1,0 +1,10 @@
+{
+	"action": "delete",
+	"listtype": "FLOORS",
+	"parentid": 2,
+	"itemid": 9,
+	"specification": {
+		"name": "Erdgeschoss2",
+		"floor_count_from_basement": 1
+	}
+}
