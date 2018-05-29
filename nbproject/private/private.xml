@@ -5,17 +5,18 @@
         <group>
             <file>file:/Applications/XAMPP/htdocs/Uebung4/models/Device.php</file>
             <file>file:/Applications/XAMPP/htdocs/Uebung4/config/config.php</file>
+            <file>file:/Applications/XAMPP/htdocs/Uebung4/test-JSON.json</file>
             <file>file:/Applications/XAMPP/htdocs/Uebung4/services/Database.php</file>
             <file>file:/Applications/XAMPP/htdocs/Uebung4/models/Sensor.php</file>
             <file>file:/Applications/XAMPP/htdocs/Uebung4/index.php</file>
             <file>file:/Applications/XAMPP/htdocs/Uebung4/models/ElectricModelItem.php</file>
-            <file>file:/Applications/XAMPP/htdocs/Uebung4/models/iPostRequestExecutor.php</file>
             <file>file:/Applications/XAMPP/htdocs/Uebung4/controller/ListController.php</file>
             <file>file:/Applications/XAMPP/htdocs/Uebung4/models/Room.php</file>
             <file>file:/Applications/XAMPP/htdocs/Uebung4/models/Floor.php</file>
             <file>file:/Applications/XAMPP/htdocs/Uebung4/models/Project.php</file>
             <file>file:/Applications/XAMPP/htdocs/Uebung4/models/ShoppingList.php</file>
             <file>file:/Applications/XAMPP/htdocs/Uebung4/views/JsonView.php</file>
+            <file>file:/Applications/XAMPP/htdocs/Uebung4/POSTCaller.php</file>
         </group>
     </open-files>
 </project-private>
