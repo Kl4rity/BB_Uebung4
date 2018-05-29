@@ -20,9 +20,11 @@ class ShoppingList implements iPostRequestExecutor {
     }
     
     public function executeRequest($requestData) {
+        //Execute the separate SQL queries to gather data needed for further steps.
         $devices = $this->getDevices($requestData->parentid);
         $sensors = $this->getSensors($requestData->parentid);
         $projectName = $this->getProjectName($requestData->parentid);
+        
         return $this->buildResponseArray($devices, $sensors, $projectName);
     }
     
@@ -42,27 +44,49 @@ class ShoppingList implements iPostRequestExecutor {
     }
     
     private function buildResponseArray($devices, $sensors, $projectName){
-        echo("DEVICES\n");
-        var_dump($devices);
-        echo("SENSORS\n");
-        var_dump($sensors);
-        echo("PROJEKTNAME\n");
-        var_dump($projectName);
         
+        //Start building the response - setting the highest level - the project name.
         $response = array("project" => $projectName);
-        $rawOutputList = $this->assignSensorsToDevices($devices, $sensors);
-        $response["shoppinglist"] = $this->setNumberOfSameShoppingItems($rawOutputList);
+        
+        //Build the shopping list
+        $devicesWithSensorsUncounted = $this->assignSensorsToDevices($devices, $sensors);
+        $shoppingList = $this->collapseDuplicateShoppingListItems($devicesWithSensorsUncounted);
+        
+        //Add it to the response
+        $response["shoppinglist"] = $shoppingList;
         
         return $response;
     }
 
-    
     private function assignSensorsToDevices($devices, $sensors){
-        $devicesWithSensors = array();
+        $shoppingList = array();
         
         foreach($devices as $device){
-            $deviceWithSensor = array("devicename" => $device["name"]);
-            $sensorList = array();
+            $deviceOnShoppingList = array("devicename" => $device["name"]);
+            $deviceOnShoppingList["sensors"] = getSensorListForDevice($device, $sensors);
+            //Set default count to 1
+            $deviceOnShoppingList["count"] = 1;
+            // Append entry to shoppingList
+            $shoppingList[] = $deviceOnShoppingList;
+        }
+        
+        return $shoppingList;
+    }
+    
+    private function collapseDuplicateShoppingListItems($shoppingList){
+        foreach($shoppingList as $comparisonSourceEntry){
+            foreach($shoppingList as $comparisonTargetEntry){
+                if(empty(array_diff($comparisonSourceEntry, $comparisonTargetEntry))){
+                    $shoppingList[$comparisonSourceEntry]["count"] += 1;
+                    unset($shoppingList[$comparisonTargetEntry]);
+                };
+            }
+        }
+        return $shoppingList;
+    }
+    
+    private function getSensorListForDevice($device, $sensors){
+       $sensorList = array();
             foreach($sensors as $sensor){
                 if($device["id"] == $sensor["devices_id"]){
                     $sensorEntry = array(
@@ -72,23 +96,6 @@ class ShoppingList implements iPostRequestExecutor {
                     $sensorList[] = $sensorEntry;
                 }
             }
-            $deviceWithSensor["count"] = 1;
-            $deviceWithSensor["sensors"] = $sensorList;
-            
-            $devicesWithSensors[] = $deviceWithSensor;
-        }
-        return $devicesWithSensors;
-    }
-    
-    private function setNumberOfSameShoppingItems($devicesWithSensors){
-        foreach($devicesWithSensors as $entryToBeCompared){
-            foreach($devicesWithSensors as $comparedToEntry){
-                if(empty(array_diff($entryToBeCompared, $comparedToEntry))){
-                    $devicesWithSensors[$entryToBeCompared]["count"] += 1;
-                    unset($devicesWithSensors[$comparedToEntry]);
-                };
-            }
-        }
-        return $devicesWithSensors;
-    }
+        return $sensorList;
+   }
 }
