@@ -43,7 +43,7 @@ class ListController {
         
        $actionIsValid = in_array(strtoupper($postData->action), $validActions);
        
-       if ($postData->listtype != "GET-SHOPPINGLIST"){
+       if (strtoupper($postData->listtype) != "GET-SHOPPINGLIST"){
            $listTypeIsValid = in_array(strtoupper($postData->listtype), $validTables);
        } else {
            $listTypeIsValid = true;
@@ -80,6 +80,5 @@ class ListController {
                 echo("No known listtype was provided!");
                 break;
         endswitch;
-        
     }    
 }
