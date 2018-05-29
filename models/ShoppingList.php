@@ -46,7 +46,7 @@ class ShoppingList implements iPostRequestExecutor {
     private function buildResponseArray($devices, $sensors, $projectName){
         
         //Start building the response - setting the highest level - the project name.
-        $response = array("project" => $projectName);
+        $response = array("project" => $projectName[0]["name"]);
         
         //Build the shopping list
         $devicesWithSensorsUncounted = $this->assignSensorsToDevices($devices, $sensors);
@@ -63,7 +63,7 @@ class ShoppingList implements iPostRequestExecutor {
         
         foreach($devices as $device){
             $deviceOnShoppingList = array("devicename" => $device["name"]);
-            $deviceOnShoppingList["sensors"] = getSensorListForDevice($device, $sensors);
+            $deviceOnShoppingList["sensors"] = $this->getSensorListForDevice($device, $sensors);
             //Set default count to 1
             $deviceOnShoppingList["count"] = 1;
             // Append entry to shoppingList
