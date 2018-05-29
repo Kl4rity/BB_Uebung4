@@ -14,7 +14,7 @@
 class Device extends ElectricModelItem {
     //put your code here
     public function create($parentId, $specification) {
-        $sql = " INSERT INTO " . $this->tableNameString . "(rooms_id, name) VALUES (". $parentId . " , '" . $specification->name . "')";
+        $sql = " INSERT INTO " . $this->tableNameString . "(".$this->parentIdTypeString.", name) VALUES (". $parentId . " , '" . $specification->name . "')";
         return $this->database->query($sql);
     }
 
